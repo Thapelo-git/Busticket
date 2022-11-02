@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react'
 import {
     SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity,
-    FlatList, Dimensions, StatusBar,  
+    FlatList, Dimensions, StatusBar,  Alert
 } from 'react-native' 
 import { db,auth } from './Firebase'
+import {Picker} from '@react-native-picker/picker';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { Divider } from 'react-native-paper';
 const { width } = Dimensions.get("screen")
 const cardWidth = width / 1.8
@@ -19,74 +21,47 @@ const AdminHome = ({navigation}) => {
 
     const user = auth.currentUser.uid;
     useEffect(() => {
-        db.ref('/TutorUsers').on('value', snap => {
+        db.ref('/BusPrice').on('value', snap => {
 
             const Student = []
             snap.forEach(action => {
                 const key = action.key
                 const data = action.val()
                 Student.push({
-                    key: key,
-                    Avalability: data.Avalability,
-                    fullname:data.fullname,location:data.location,
-                    Description:data.Description, Gender:data.Gender,
-                    email:data.email,StartDate:data.StartDate,
-                    Subject:data.Subject,Price:data.Price
+                    key: key,Fromplace:data.Fromplace,
+                    BusType: data.BusType,Toplace:data.Toplace,
+                   Price:data.Price
                 })
-                const text='Available'
-                if(text){
-                 const newData = Student.filter(function(item){
-                     const itemData = item.Description ? item.Description
-                     :'';
-                     const textData = text;
-                     return itemData.indexOf( textData)>-1;
-     
-                 })
-                 setStudent(newData)
-                 
-               }
-                 
-               const deactive='Unavailable'
-               if(deactive){
-                const newInfor = Student.filter(function(item){
-                    const itemData = item.Description ? item.Description
-                    :'';
-                    const textData = deactive;
-                    return itemData.indexOf( textData)>-1;
-    
-                })
-                
-                setFilteredDataSource(newInfor);
-             
-              } 
+                setStudent(Student)
+               
                
 
             })
         })
-        db.ref('/TutorUsers/' + user).on('value', snap => {
-
-            setName(snap.val() && snap.val().fullname);
-            setPhonenumber(snap.val().phonenumber)
-            setEmail(snap.val().email)
-            
-        })
-
-
 
     }, [])
+    const handleDelete=(key)=>{
+      Alert.alert('Confirm','Are you sure you want to delete?',[
+        {text:'Yes',
+       onPress:()=>db.ref('BusPrice').child(key).remove(),
+      },
+      {text:'No'},
+      ]);
+      
   
+      }
     const Card = ({ element, index }) => {
         return (
            <>
            <View style={{ margin: 20,backgroundColor: '#fff',elevation: 3 }}>
            <View style={{width:'100%'}}>
-                      <View style={{ backgroundColor: 'gray', justifyContent: 'flex-start', flexDirection: 'row', padding: 8, alignItems:'center', borderBottomRightRadius:10}}>
+                      <View style={{ backgroundColor: '#fff', justifyContent: 'flex-start', flexDirection: 'row', padding: 8, alignItems:'center', borderBottomRightRadius:10}}>
                        
-                        <Text style={{color: '#fff'}}>
-                          Location
+                        <Text >
+                          From:
                         </Text>
-                        <Text style={{color: '#fff'}}>
-                          {" "}{element.location}
+                        <Text >
+                          {" "}{element.Fromplace}
                         </Text>
                       </View>
                     </View>
@@ -104,7 +79,7 @@ const AdminHome = ({navigation}) => {
                     <View style={{ backgroundColor: '#fff', justifyContent:'flex-start', flexDirection: 'row', padding: 8, alignItems:'center'}}>
                     
                       <Text style={{paddingHorizontal: 5,color:'#333'}}>
-                       {element.Avalability}  Tutor
+                       To:  {element.Toplace}  
                       </Text>
                     </View>
                     </View>
@@ -119,184 +94,112 @@ const AdminHome = ({navigation}) => {
                       /> */}
                       <Text>R:</Text>
                       <Text style={{color:'blue', fontSize:12}}>
-                        {element.Price} per {element.StartDate}
+                        {element.Price}
                       </Text>
                     </View>
 
                     <Divider style={{width: 170, justifyContent:'flex-end', alignItems:'flex-end', alignSelf:'flex-end'}}/>
 
                   {/* location */}
-                  <View style={{flexDirection:'row'}}>
-                  <View style={{ backgroundColor: '#fff', justifyContent: 'flex-end', flexDirection: 'row', padding: 8 , alignItems:'center'}}>
-                    <View>
-                    <Text>Name: </Text>
-                    <Text style={{color:'#333'}}>
-                      {element.fullname}
-                    </Text>
-                    </View>
-                    <View>
-                    <Text>Gender: </Text>
-                    <Text style={{color:'#333'}}>
-                      {element.Gender}
-                    </Text>
-                    </View>
-                  </View>
-                  <View style={{ backgroundColor: '#fff', justifyContent:'flex-start', flexDirection: 'row', padding: 8 , alignItems:'center'}}>
-                    <View>
-                    <Text>Specialist of: </Text>
-                    <Text style={{color:'#333'}}>
-                      {element.Subject}
-                    </Text>
-                    </View>
-                    
-                  </View>
-                  </View>
-                  <Divider style={{width: 200, justifyContent:'flex-end', alignItems:'flex-end', alignSelf:'flex-end'}}/>
-
-                  {/* description */}
-                  <View style={{ justifyContent: 'center',  padding: 8,marginHorizontal:10 }}>
-                  <TouchableOpacity style={styles.signinButton}
-              onPress={()=>navigation.navigate('AdminView',{Key:element.key,Description:element.Description})} >
-                <Text style={styles.signinButtonText}
-                
-                >View</Text>
-            </TouchableOpacity>
-                  </View>
-                  </View>
-           </>)
-    }
-    const updateAvailability = (Key) => {
-        db.ref('TutorUsers').child(Key).update({Description:'Available'})
-          .then(()=>db.ref('TutorUsers').once('value'))
-          .then(snapshot=>snapshot.val())
-          .catch(error => ({
-            errorCode: error.code,
-            errorMessage: error.message
-          }));
-     
   
-    }
-    const NewCard = ({ element, index }) => {
-        return (
-           <>
-           <View style={{ margin: 20,backgroundColor: '#fff',elevation: 3 }}>
-           <View style={{width:'100%'}}>
-                      <View style={{ backgroundColor: 'gray', justifyContent: 'flex-start', flexDirection: 'row', padding: 8, alignItems:'center', borderBottomRightRadius:10}}>
-                       
-                        <Text style={{color: '#fff'}}>
-                          Location
-                        </Text>
-                        <Text style={{color: '#fff'}}>
-                          {" "}{element.location}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <Divider style={{width: 90, justifyContent:'flex-end', alignItems:'flex-end', alignSelf:'flex-end'}}/>
-
-                    {/* event type */}
-                    <View style={{flexDirection:'row',}}>
-                    <View style={{ backgroundColor: '#fff', justifyContent: 'flex-end', flexDirection: 'row', padding: 8, alignItems:'center'}}>
-                      {/* <Ionicons name="documents" color='#333' size={20} /> */}
-                      <Text style={{paddingHorizontal: 5,color:'#333'}}>
-                       
-                      </Text>
-                    </View>
-                    <View style={{ backgroundColor: '#fff', justifyContent:'flex-start', flexDirection: 'row', padding: 8, alignItems:'center'}}>
-                    
-                      <Text style={{paddingHorizontal: 5,color:'#333'}}>
-                       {element.Avalability}  Tutor
-                      </Text>
-                    </View>
-                    </View>
-                    <Divider style={{width: 120, justifyContent:'flex-end', alignItems:'flex-end', alignSelf:'flex-end'}}/>
-
-                    {/* date */}
-                    <View style={{ backgroundColor: '#fff', justifyContent: 'flex-end', flexDirection: 'row', padding: 8, alignItems:'center' }}>
-                      {/* <Feather
-                        name="calendar" size={20}
-                        style={{ paddingHorizontal: 5 }}
-                        color='blue'
-                      /> */}
-                      <Text>R:</Text>
-                      <Text style={{color:'blue', fontSize:12}}>
-                        {element.Price} per {element.StartDate}
-                      </Text>
-                    </View>
-
-                    <Divider style={{width: 170, justifyContent:'flex-end', alignItems:'flex-end', alignSelf:'flex-end'}}/>
-
-                  {/* location */}
-                  <View style={{flexDirection:'row'}}>
-                  <View style={{ backgroundColor: '#fff', justifyContent: 'flex-end', flexDirection: 'row', padding: 8 , alignItems:'center'}}>
-                    <View>
-                    <Text>Name: </Text>
-                    <Text style={{color:'#333'}}>
-                      {element.fullname}
-                    </Text>
-                    </View>
-                    <View>
-                    <Text>Gender: </Text>
-                    <Text style={{color:'#333'}}>
-                      {element.Gender}
-                    </Text>
-                    </View>
-                  </View>
-                  <View style={{ backgroundColor: '#fff', justifyContent:'flex-start', flexDirection: 'row', padding: 8 , alignItems:'center'}}>
-                    <View>
-                    <Text>Specialist of: </Text>
-                    <Text style={{color:'#333'}}>
-                      {element.Subject}
-                    </Text>
-                    </View>
-                    
-                  </View>
-                  </View>
-                  <Divider style={{width: 200, justifyContent:'flex-end', alignItems:'flex-end', alignSelf:'flex-end'}}/>
-
+                 
                   {/* description */}
                   <View style={{ justifyContent: 'center',  padding: 8,marginHorizontal:10 }}>
-                  <TouchableOpacity style={styles.signinButton}
-              onPress={()=>updateAvailability(element.key)} >
-                <Text style={styles.signinButtonText}
-                
-                >Add to list</Text>
-            </TouchableOpacity>
+                  <TouchableOpacity onPress={()=>handleDelete(element.key)}>
+        <MaterialIcons name='delete' size={25} color='red'/>
+        </TouchableOpacity>
                   </View>
                   </View>
            </>)
     }
+  const [Fromplace,setFromplace]=useState('')
+  const [Toplace,setToplace]=useState('') 
+  const [Price,setPrice]=useState('')
+  const [BusType,setBusType]=useState('')
+  const addPrice = () => {
+    
+      db.ref('BusPrice').push({
+      
+        Fromplace,
+        Toplace,
+        Price,
+        BusType,
+      })
+   
+  
+  };
   return (
     <View>
-       <View style={styles.headerContainer}
-        >
-          <View style={{
-            backgroundColor: 'white',
-            opacity: 0.7, width: 30,
-            height: 30, justifyContent: 'center', alignItems: 'center',
-            borderRadius: 10,
-          }}>
-            {/* <Feather name="arrow-left" size={30} color='black'
-              onPress={() => navigation.goBack()} /> */}
-          </View>
-          <Text style={styles.headerTitle}></Text>
-        </View>
-        <View style={styles.headerContainer}
-        >
-          <View style={{
-            backgroundColor: 'white',
-            opacity: 0.7, width: 30,
-            height: 30, justifyContent: 'center', alignItems: 'center',
-            borderRadius: 10,
-          }}>
-            <Feather name="arrow-left" size={30} color='black'
-              onPress={() => navigation.goBack()} />
-          </View>
-          <Text style={styles.headerTitle}>Logout</Text>
-        </View>
-        <View style={{alignItems:'center'}}>
-            <Text style={{fontWeight:'bold',color:'blue'}}>Active Tutors</Text>
+      <View style={{ backgroundColor: '#fff', justifyContent:'flex-start', flexDirection: 'row', padding: 8, alignItems:'center'}}>
+      <View>
+<Text style={styles.titles}>From:</Text>
+
+<Picker
+     selectedValue={Fromplace}
+     style={{ width: 160, height: 50, backgroundColor: '#eee' }}
+     onValueChange={(text)=>setFromplace(text)}   >
+    <Picker.Item label="select" value="" />
+    <Picker.Item label="Moletjie" value="Moletjie" />
+    <Picker.Item label="Seshego" value="Seshego" />
+    <Picker.Item label="Leboakgomo" value="Leboakgomo" />
+    <Picker.Item label="Ladana" value="Ladana" />
+    <Picker.Item label="Polokwane" value="Polokwane" />
+    <Picker.Item label="Turf" value="Turf" />
+</Picker>
+</View>
+<View>
+<Text style={styles.titles}>To:</Text>
+
+<Picker
+     selectedValue={Toplace}
+     style={{ width: 160, height: 50, backgroundColor: '#eee' }}
+     onValueChange={(text)=>setToplace(text)}   >
+    <Picker.Item label="select" value="" />
+    <Picker.Item label="Moletjie" value="Moletjie" />
+    <Picker.Item label="Seshego" value="Seshego" />
+    <Picker.Item label="Leboakgomo" value="Leboakgomo" />
+    <Picker.Item label="Ladana" value="Ladana" />
+    <Picker.Item label="Polokwane" value="Polokwane" />
+    <Picker.Item label="Turf" value="Turf" />
+</Picker>
+</View>
+      </View>
+      <Text style={{marginVertical:10}}>Price </Text>
+            <View style={styles.inputContainer}>
+                <View style={styles.inputSubContainer}>
+                    
+                    
+                    <TextInput placeholder="Price"
+                    selectionColor='gainsboro'
+                    style={styles.inputText}
+                    keyboardType='numeric'
+                    onChangeText={(text)=>setPrice(text)}
+             value={Price}
+                    />
+                </View>
             </View>
+            <View>
+<Text style={styles.titles}>Bus Type:</Text>
+
+<Picker
+     selectedValue={BusType}
+     style={{ width: 200, height: 50, backgroundColor: '#eee' }}
+     onValueChange={(text)=>setBusType(text)}   >
+    <Picker.Item label="select" value="" />
+    <Picker.Item label="Great north" value="Great_north" />
+    <Picker.Item label="Madodi" value="Madodi" />
+    {/* <Picker.Item label="Leboakgomo" value="Leboakgomo" />
+    <Picker.Item label="Ladana" value="Ladana" />
+    <Picker.Item label="Polokwane" value="Polokwane" />
+    <Picker.Item label="Turf" value="Turf" /> */}
+</Picker>
+</View>
+<View style={{ justifyContent: 'center',  padding: 8,marginHorizontal:10 }}>
+                  <TouchableOpacity style={styles.signinButton}
+              onPress={()=>addPrice()} >
+                <Text style={styles.signinButtonText}>Add </Text>
+            </TouchableOpacity>
+                  </View>
       <FlatList
             keyExtractor={(_, key) => key.toString()}
            horizontal
@@ -305,17 +208,8 @@ const AdminHome = ({navigation}) => {
             data={Student}
             renderItem={({ item, index }) => <Card element={item} index={index} />}
         />
-        <View style={{alignItems:'center'}}>
-            <Text style={{fontWeight:'bold',color:'blue'}}>Deactivated Tutors</Text>
-            </View>
-      <FlatList
-            keyExtractor={(_, key) => key.toString()}
-           horizontal
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingLeft: 20 }}
-            data={filteredDataSource}
-            renderItem={({ item, index }) => <NewCard element={item} index={index} />}
-        />
+        
+      
     </View>
   )
 }
@@ -352,5 +246,17 @@ const styles = StyleSheet.create({
       paddingVertical: 20,
       paddingHorizontal: 20
   },
+  inputContainer:{
+    backgroundColor:'#fff',
+marginVertical:10,
+borderWidth:1,
+borderColor:'#000',
+justifyContent:'center',
+width:150
+   },
+   inputSubContainer:{
+       flexDirection:'row',
+       alignItems:'center'
+   },
    
 })

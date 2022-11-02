@@ -36,7 +36,7 @@ const Adminlogin = ({props}) => {
                             await AsyncStorageLib.setItem("TutorUsers", res.user.uid)
                           
         
-                            navigation.navigate('AdminHome')
+                            navigation.navigate('AdminView')
                         } catch (e) {
                             console.log("no data ");
                         }

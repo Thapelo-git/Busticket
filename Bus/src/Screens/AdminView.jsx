@@ -4,60 +4,15 @@ import { db,auth } from './Firebase';
 import Feather from 'react-native-vector-icons/Feather'
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import { ScrollView } from 'react-native-gesture-handler';
+import AdminHome from './AdminHome';
 //AdminView
 const AdminView = ({navigation,route}) => {
-    const [Key,setKey]=useState(route.params.Key)
-    const [Description,setDescription]=useState(route.params.Description)
-    const [Tutor, setTutor] = useState([]);
-    const user = auth.currentUser.uid;
-    useEffect(() => {
-        db.ref('/RequestTutor').on('value', snap => {
-
-            const Student = []
-            snap.forEach(action => {
-                const key = action.key
-                const data = action.val()
-                Student.push({
-                    key:key,TutorKey:data.TutorKey,
-                    Status:data.Status,fullname:data.fullname,Email:data.Email,PhoneNum:data.PhoneNum,
-                    Avalability:data.Avalability,Gender:data.Gender,Price:data.Price,
-                    StartDate:data.StartDate,Subject:data.Subject,Profile:data.Profile,
-                    name:data.name,location:data.location,email:data.email,user:data.user,CurrentName:data.CurrentName,
-                    Comment:data.Comment,Ratingnumber:data.Ratingnumber,
-                })
-                const text=Key
-                if(text){
-                 const newData = Student.filter(function(item){
-                     const itemData = item.TutorKey ? item.TutorKey
-                     :'';
-                     const textData = text;
-                     return itemData.indexOf( textData)>-1;
-     
-                 })
-                 setTutor(newData)
-                 
-               }
-    
-            })
-        })
-    
-
-
-
-    }, [])
-    const updateComment = () => {
-        db.ref('TutorUsers').child(Key).update({Description:'Unavailable'})
-          .then(()=>db.ref('TutorUsers').once('value'))
-          .then(snapshot=>snapshot.val())
-          .catch(error => ({
-            errorCode: error.code,
-            errorMessage: error.message
-          }));
-     
-  
-    }
+  const [page,setPage]=useState(0)
   return (
     <View>
+       <View style={styles.headerContainer}>
+     <Text style={styles.headerTitle}></Text>
+            </View>
          <View style={styles.headerContainer}
         >
           <View style={{
@@ -69,37 +24,42 @@ const AdminView = ({navigation,route}) => {
             <Feather name="arrow-left" size={30} color='black'
               onPress={() => navigation.goBack()} />
           </View>
-          <Text style={styles.headerTitle}></Text>
+          <Text style={styles.headerTitle}>Logout</Text>
         </View>
-        <View style={{alignItems:'center',padding:15}}>
-    <Text>Remove From Tutor List</Text>
-  <TouchableOpacity style={styles.signinButton}
-                                 onPress={()=>updateComment()}
-                          
-                             >
-                              <Text style={styles.signinButtonText}>Remove</Text>
-                          </TouchableOpacity>
-                          </View>
-                          <View>
-        {
-            Tutor.map((element)=>{return(
-            <View><ScrollView style={{padding:20}}>
-            <View style={{alignItems:'center'}}>
-            <Text style={{fontWeight:'bold',color:'blue'}}>Ratings from {element.CurrentName}</Text>
-            </View>
-                  <AirbnbRating
-  count={5}
-  reviews={["Terrible", "Bad", "Okay",  "Good", "Great", ]}
-  defaultRating={element.Ratingnumber}
-//   rating={0}
-//   onFinishRating={(rating)=>ratingCompleted(rating)}
-  size={50}
-/>
-                <Text>Comments</Text>
-                <Text>{element.Comment}</Text>
-                </ScrollView></View>
-            )})
+        <View style={{justifyContent:'center',alignItems:'center'}}>
+      <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',
+    width:250,height:60,}}>
+          <TouchableOpacity style={{width:130,height:45,borderColor:page === 0?'#3EA055':'gainsboro',justifyContent:'center',
+        alignItems:'center',borderWidth:1}} 
+        onPress={()=>setPage(0)}>
+              <Text style={{color:page===0?'#3EA055':'gainsboro',fontWeight:'bold'}}>Add Price</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{width:130,height:45,borderColor:page === 1?'#3EA055':'gainsboro',justifyContent:'center',
+        alignItems:'center',borderWidth:1}} 
+        onPress={()=>setPage(1)}>
+              <Text style={{color:page===1?'#3EA055':'gainsboro',fontWeight:'bold'}}>Lost Card</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{width:130,height:45,borderColor:page === 2?'#3EA055':'gainsboro',justifyContent:'center',
+        alignItems:'center',borderWidth:1}}
+        onPress={()=>setPage(2)}>
+              <Text style={{color:page===2?'#3EA055':'gainsboro',fontWeight:'bold'}}>Found Card</Text>
+          </TouchableOpacity>
+      </View>
+      <View style={{
+    width:'100%',}}>
+          {
+            page === 0?(<AdminHome navigation={navigation}/>):(null)
         }
+      {/* {
+            page === 0?(<LostDetails/>):(null)
+        }
+    
+         {
+            page === 2?(<SplashScreen navigation={navigation}/>):(null)
+        }
+         */}
+        </View>
+      
         </View>
   
     </View>
@@ -109,12 +69,12 @@ const AdminView = ({navigation,route}) => {
 export default AdminView
 
 const styles = StyleSheet.create({
-    headerContainer: {
-        top: 10,
-        flexDirection: 'row', justifyContent: 'space-between',
-        alignContent: 'center'
+    // headerContainer: {
+    //     top: 10,
+    //     flexDirection: 'row', justifyContent: 'space-between',
+    //     alignContent: 'center'
   
-      },
+    //   },
       signinButton:{
         backgroundColor:'#000',
         borderWidth:1,
@@ -131,4 +91,19 @@ const styles = StyleSheet.create({
         color:'#fff',
         
     },
+ 
+  
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 20
+},
+headerTitle: {
+    fontSize: 20,
+    lineHeight: 20 * 1.4,  
+    textAlign: 'center'
+
+},
 })
