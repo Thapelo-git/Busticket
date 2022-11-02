@@ -22,46 +22,29 @@ const HomeScreen = ({navigation}) => {
 
     const user = auth.currentUser.uid;
     useEffect(() => {
-        db.ref('/TutorUsers').on('value', snap => {
+        db.ref('/BusPrice').on('value', snap => {
 
             const Student = []
             snap.forEach(action => {
                 const key = action.key
                 const data = action.val()
                 Student.push({
-                    key: key,
-                    Avalability: data.Avalability,
-                    fullname:data.fullname,location:data.location,
-                    Description:data.Description, Gender:data.Gender,
-                    email:data.email,StartDate:data.StartDate,
-                    Subject:data.Subject,Price:data.Price
+                    key: key,Fromplace:data.Fromplace,
+                    BusType: data.BusType,Toplace:data.Toplace,
+                   Price:data.Price
                 })
-                const text='Available'
-                if(text){
-                 const newData = Student.filter(function(item){
-                     const itemData = item.Description ? item.Description
-                     :'';
-                     const textData = text;
-                     return itemData.indexOf( textData)>-1;
-     
-                 })
-                 setStudent(newData)
-                 setFilteredDataSource(newData);
-                 setMasterDataSource(newData);
-               }
+              
+                 setStudent(Student)
+                 setFilteredDataSource(Student);
+                 setMasterDataSource(Student);
+               
                  
                
                
 
             })
         })
-        db.ref('/TutorUsers/' + user).on('value', snap => {
-
-            setName(snap.val() && snap.val().fullname);
-            setPhonenumber(snap.val().phonenumber)
-            setEmail(snap.val().email)
-            
-        })
+      
 
 
 
@@ -186,6 +169,8 @@ const HomeScreen = ({navigation}) => {
                   </View>
            </>)
     }
+    const [place1,setPlace1]=useState('')
+    const [place2,setPlace2]=useState('')
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', padding: 10 }}>
     <StatusBar
@@ -221,40 +206,53 @@ const HomeScreen = ({navigation}) => {
   </TouchableOpacity> */}
     </View>
 
-    <View style={{
-        marginTop: 20,
-        flexDirection: 'row',
-        paddingHorizontal: 20,
-    }}>
-        <TouchableOpacity style={styles.inputContainer}
-            onPress={() => bottomopen.current.show()}>
-
-            <Ionicons name="search" size={24} />
-
-            <View
-                style={{ fontSize: 18, flex: 1, marginLeft: 10 }}
-            ><Text>Search by City</Text></View>
-
-
-        </TouchableOpacity>
-    </View>
+    
  
     <View style={{ paddingVertical: 20 }}>
 
-        <Text style={styles.titles}>Choose by Subject</Text>
+    <View style={{ backgroundColor: '#fff', justifyContent:'flex-start', flexDirection: 'row', padding: 8, alignItems:'center'}}>
+      <View>
+<Text style={styles.titles}>From:</Text>
 
-        <Picker
-            selectedValue={StudentContainer}
-            style={{ width: 300, height: 50, backgroundColor: '#eee' }}
-            onValueChange={(value, id) => { FilterFunction(value) }}>
-            <Picker.Item label="select" value="" />
-            <Picker.Item label="Mathematics" value="Mathematics" />
-            <Picker.Item label="Physical_Sciences" value="PS" />
-            <Picker.Item label="Life_Sciences" value="LS" />
-            <Picker.Item label="Natural_Sciences" value="NS" />
-            <Picker.Item label="History" value="History" />
-            <Picker.Item label="Other" value="Other" />
-        </Picker>
+<Picker
+     selectedValue={place1}
+     style={{ width: 160, height: 50, backgroundColor: '#eee' }}
+     onValueChange={(text)=>setPlace1(text)}   >
+    <Picker.Item label="select" value="" />
+    <Picker.Item label="Moletjie" value="Moletjie" />
+    <Picker.Item label="Seshego" value="Seshego" />
+    <Picker.Item label="Leboakgomo" value="Leboakgomo" />
+    <Picker.Item label="Ladana" value="Ladana" />
+    <Picker.Item label="Polokwane" value="Polokwane" />
+    <Picker.Item label="Turf" value="Turf" />
+</Picker>
+</View>
+<View>
+<Text style={styles.titles}>To:</Text>
+
+<Picker
+     selectedValue={place2}
+     style={{ width: 160, height: 50, backgroundColor: '#eee' }}
+     onValueChange={(text)=>setPlace2(text)}   >
+    <Picker.Item label="select" value="" />
+    <Picker.Item label="Moletjie" value="Moletjie" />
+    <Picker.Item label="Seshego" value="Seshego" />
+    <Picker.Item label="Leboakgomo" value="Leboakgomo" />
+    <Picker.Item label="Ladana" value="Ladana" />
+    <Picker.Item label="Polokwane" value="Polokwane" />
+    <Picker.Item label="Turf" value="Turf" />
+</Picker>
+</View>
+      </View>
+      {
+        Student.filter(element=>element.Fromplace === place1 &&
+            element.Toplace === place2 ).map(item=>(
+                <View>
+                    <Text>{item.Price}</Text>
+                </View>
+            ))
+      }
+      <View></View>
         <FlatList
             keyExtractor={(_, key) => key.toString()}
            horizontal
@@ -264,20 +262,7 @@ const HomeScreen = ({navigation}) => {
             renderItem={({ item, index }) => <Card element={item} index={index} />}
         />
 
-<View style={{
-        marginTop: 20,
-        flexDirection: 'row',
-        paddingHorizontal: 20,
-    }}>
-        <TouchableOpacity style={styles.buttonContainer}
-            onPress={() => navigation.navigate('Profile')}>
-            
-            <View
-                style={{ fontSize: 18, flex: 1, marginLeft: 10 }} >
-                    <Text>Tell us more about your self</Text></View>
-                    <Feather name="arrow-right" size={24} />
-        </TouchableOpacity>
-    </View>
+
     </View>
     <ModelSearch bottomopen={bottomopen} navigation={navigation} />
 
