@@ -116,10 +116,11 @@ const AdminHome = ({navigation}) => {
   const [Toplace,setToplace]=useState('') 
   const [Price,setPrice]=useState('')
   const [BusType,setBusType]=useState('')
+  // const Seats= 65
   const addPrice = () => {
     
       db.ref('BusPrice').push({
-      
+        // Seats,
         Fromplace,
         Toplace,
         Price,

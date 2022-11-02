@@ -8,8 +8,11 @@ import { ScrollView } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 import { Divider } from 'react-native-paper';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { auth,db } from './Firebase';
 import ModelSearch from './ModelSearch';
+import moment from 'moment';
 const { width } = Dimensions.get("screen")
 const cardWidth = width / 1.8
 const HomeScreen = ({navigation}) => {
@@ -67,103 +70,25 @@ const HomeScreen = ({navigation}) => {
   
     }
     const bottomopen = useRef()
-    const Card = ({ element, index }) => {
-        return (
-           <>
-           <View style={{ margin: 20,backgroundColor: '#fff',elevation: 3 }}>
-           <View style={{width:'100%'}}>
-                      <View style={{ backgroundColor: 'gray', justifyContent: 'flex-start', flexDirection: 'row', padding: 8, alignItems:'center', borderBottomRightRadius:10}}>
-                       
-                        <Text style={{color: '#fff'}}>
-                          Location
-                        </Text>
-                        <Text style={{color: '#fff'}}>
-                          {" "}{element.location}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <Divider style={{width: 90, justifyContent:'flex-end', alignItems:'flex-end', alignSelf:'flex-end'}}/>
-
-                    {/* event type */}
-                    <View style={{flexDirection:'row',}}>
-                    <View style={{ backgroundColor: '#fff', justifyContent: 'flex-end', flexDirection: 'row', padding: 8, alignItems:'center'}}>
-                      {/* <Ionicons name="documents" color='#333' size={20} /> */}
-                      <Text style={{paddingHorizontal: 5,color:'#333'}}>
-                       
-                      </Text>
-                    </View>
-                    <View style={{ backgroundColor: '#fff', justifyContent:'flex-start', flexDirection: 'row', padding: 8, alignItems:'center'}}>
-                    
-                      <Text style={{paddingHorizontal: 5,color:'#333'}}>
-                       {element.Avalability}  Tutor
-                      </Text>
-                    </View>
-                    </View>
-                    <Divider style={{width: 120, justifyContent:'flex-end', alignItems:'flex-end', alignSelf:'flex-end'}}/>
-
-                    {/* date */}
-                    <View style={{ backgroundColor: '#fff', justifyContent: 'flex-end', flexDirection: 'row', padding: 8, alignItems:'center' }}>
-                      {/* <Feather
-                        name="calendar" size={20}
-                        style={{ paddingHorizontal: 5 }}
-                        color='blue'
-                      /> */}
-                      <Text>R:</Text>
-                      <Text style={{color:'blue', fontSize:12}}>
-                        {element.Price} per {element.StartDate}
-                      </Text>
-                    </View>
-
-                    <Divider style={{width: 170, justifyContent:'flex-end', alignItems:'flex-end', alignSelf:'flex-end'}}/>
-
-                  {/* location */}
-                  <View style={{flexDirection:'row'}}>
-                  <View style={{ backgroundColor: '#fff', justifyContent: 'flex-end', flexDirection: 'row', padding: 8 , alignItems:'center'}}>
-                    <View>
-                    <Text>Name: </Text>
-                    <Text style={{color:'#333'}}>
-                      {element.fullname}
-                    </Text>
-                    </View>
-                    <View>
-                    <Text>Gender: </Text>
-                    <Text style={{color:'#333'}}>
-                      {element.Gender}
-                    </Text>
-                    </View>
-                  </View>
-                  <View style={{ backgroundColor: '#fff', justifyContent:'flex-start', flexDirection: 'row', padding: 8 , alignItems:'center'}}>
-                    <View>
-                    <Text>Specialist of: </Text>
-                    <Text style={{color:'#333'}}>
-                      {element.Subject}
-                    </Text>
-                    </View>
-                    
-                  </View>
-                  </View>
-                  <Divider style={{width: 200, justifyContent:'flex-end', alignItems:'flex-end', alignSelf:'flex-end'}}/>
-
-                  {/* description */}
-                  {
-                    element.key === user?(<><Text></Text></>):(<>  <View style={{ justifyContent: 'center',  padding: 8,marginHorizontal:10 }}>
-                    <TouchableOpacity style={styles.signinButton}
-                onPress={()=>updateAccept(element.key,element.Avalability,
-                element.Gender,element.Price,element.StartDate,element.Subject,element.fullname,
-                element.location,)} >
-                  <Text style={styles.signinButtonText}
-                  
-                  >Request</Text>
-              </TouchableOpacity>
-                    </View></>)
-                  }
-                
-                  </View>
-           </>)
-    }
+    
     const [place1,setPlace1]=useState('')
     const [place2,setPlace2]=useState('')
+    const [checkin,setCheckin]=useState(moment(new Date()).format('YYYY/MM/DD'))
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    setCheckin(moment(date).format('YYYY/MM/DD') )
+    // console.warn("A date has been picked: ", date);
+    hideDatePicker();
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', padding: 10 }}>
     <StatusBar
@@ -237,6 +162,21 @@ const HomeScreen = ({navigation}) => {
 </Picker>
 </View>
       </View>
+      <Text>Departure</Text>
+      <TouchableOpacity style={styles.datebutton} 
+        onPress={()=>showDatePicker()} >
+        
+     
+        <FontAwesome name='calendar' size={20}/>
+        </TouchableOpacity>
+        <Text>{checkin}</Text>
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        minimumDate={new Date()}
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
       {
         Student.filter(element=>element.Fromplace === place1 &&
             element.Toplace === place2 ).map(item=>(
@@ -245,9 +185,9 @@ const HomeScreen = ({navigation}) => {
                     <Text>Type of bus: {item.BusType}</Text>
                     <TouchableOpacity style={styles.signinButton}
                 onPress={()=>navigation.navigate('Splash',{Price:item.Price,Fromplace:item.Fromplace,
-                Toplace:item.Toplace,BusType:item.BusType})} >
+                Toplace:item.Toplace,BusType:item.BusType,checkin:checkin})} >
                   <Text style={styles.signinButtonText}
-                  >Procced</Text>
+                  >Proceed</Text>
               </TouchableOpacity>
                 </View>
             ))
@@ -319,6 +259,17 @@ const styles = StyleSheet.create({
         color:'#000',
         
     },
+    datebutton:{
+        height:60,
+        width:100,
+        borderRadius:10,
+        borderWidth:1,
+        borderColor: "rgba(0,0,0,.2)",
+        display:'flex',
+        alignItems:'center',
+        justifyContent:'center'
+    
+      },
     categoryBtn: {
         height: 45,
         width: 80,
