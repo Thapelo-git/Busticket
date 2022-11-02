@@ -37,17 +37,10 @@ const HomeScreen = ({navigation}) => {
                  setStudent(Student)
                  setFilteredDataSource(Student);
                  setMasterDataSource(Student);
-               
-                 
-               
-               
-
+    
             })
         })
-      
-
-
-
+ 
     }, [])
     const [StudentsList, setStudentsList] = useState([]);
     const [StudentContainer, setStudentContainer] = useState('')
@@ -247,8 +240,15 @@ const HomeScreen = ({navigation}) => {
       {
         Student.filter(element=>element.Fromplace === place1 &&
             element.Toplace === place2 ).map(item=>(
-                <View>
-                    <Text>{item.Price}</Text>
+                <View style={{padding:20}} key={item.key}>
+                    <Text>Fee = {item.Price}</Text>
+                    <Text>Type of bus: {item.BusType}</Text>
+                    <TouchableOpacity style={styles.signinButton}
+                onPress={()=>navigation.navigate('Splash',{Price:item.Price,Fromplace:item.Fromplace,
+                Toplace:item.Toplace,BusType:item.BusType})} >
+                  <Text style={styles.signinButtonText}
+                  >Procced</Text>
+              </TouchableOpacity>
                 </View>
             ))
       }
