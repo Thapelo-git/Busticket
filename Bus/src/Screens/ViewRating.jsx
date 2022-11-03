@@ -16,7 +16,8 @@ const ViewRating = ({navigation,route}) => {
   const [BusType,setBusType]=useState(route.params.BusType)
   const [Passenger,setPassenger]=useState(route.params.Passenger)
   const [checkin,setCheckin]=useState(route.params.checkin)
-  const [checkout,setCheckout]=useState(moment(route.params.checkout).toNow())
+  const [Status,setStatus]=useState('Paid')
+  const [checkout,setCheckout]=useState(route.params.checkout)
   const Duration= route.params.Duration
   const NewPrice=route.params.NewPrice
   const user = auth.currentUser.uid;
@@ -59,6 +60,15 @@ borderRadius:10,borderWidth:2,borderColor:selectedBtnIndex == index?('blue'):('#
 
         </TouchableOpacity>
     )
+}
+const addBooking=()=>{
+  db.ref('BusPayment').push({
+    Toplace,Fromplace,Price,BusType,Passenger,
+    checkin,Status,checkout, Duration,NewPrice,user 
+ 
+  })
+  navigation.navigate('RatingScreen')
+
 }
   return (
     <View>
@@ -174,11 +184,16 @@ borderRadius:10,borderWidth:2,borderColor:selectedBtnIndex == index?('blue'):('#
     ))
 } */}
 </View>
-<View style={{width:'100%',justifyContent:'center',alignItems:'center',padding:10}}>
 
-            </View>
            </View>
            </ScrollView> )}</Formik>
+           <View style={{width:'100%',justifyContent:'center',alignItems:'center',padding:10}}>
+<TouchableOpacity style={styles.signinButton}
+                onPress={()=>addBooking()} >
+                  <Text style={styles.signinButtonText}
+                  >Pay</Text>
+              </TouchableOpacity>
+            </View>
     </View>
   )
 }
@@ -231,4 +246,20 @@ const styles = StyleSheet.create({
             height:60,
             width:100
         },
+        signinButton:{
+          backgroundColor:'#fff',
+          borderWidth:1,
+          marginHorizontal:20,
+          height:40,
+          justifyContent:'center',
+          alignItems:'center',
+          marginTop:20,
+          width:300,
+      },
+      signinButtonText:{
+          fontSize:18,
+          lineHeight:18 * 1.4,
+          color:'#000',
+          
+      },
 })

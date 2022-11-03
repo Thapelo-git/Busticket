@@ -23,9 +23,9 @@ const TabScreen = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarLabel: 'Search',
+          tabBarLabel: 'Home',
           tabBarIcon: ({ color }) => (
-          <FontAwesome name="search" color={color} size={24} />
+          <FontAwesome name="home" color={color} size={24} />
           ),
         }}
       />
@@ -34,7 +34,7 @@ const TabScreen = () => {
         name="Results"
         component={ResultsScreen}
         options={{
-          tabBarLabel: 'Results',
+          tabBarLabel: 'Tickets',
           tabBarIcon: ({ color }) => (
             <Ionicons name="documents" color={color} size={24} />
           

@@ -14,7 +14,7 @@ const SplashScreen = ({navigation,route}) => {
   const [BusType,setBusType]=useState(route.params.BusType)
   const [Passenger,setPassenger]=useState(1)
   const [checkin,setCheckin]=useState(route.params.checkin)
-  const [checkout,setCheckout]=useState(moment(new Date()).format('YYYY/MM/DD'))
+  const [checkout,setCheckout]=useState(moment(new Date()).add(1,'days').format('YYYY/MM/DD'))
   var datetoday= new Date()
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -28,7 +28,7 @@ const SplashScreen = ({navigation,route}) => {
 
   const handleConfirm = (date) => {
     setCheckout(moment(date).format('YYYY/MM/DD') )
-    // console.warn("A date has been picked: ", date);
+    // console.warn("A date has been picked: ", date);//8152486760 pin:2022
     hideDatePicker();
   };
   const [Duration,setDuration]=useState('Daily')
@@ -47,6 +47,10 @@ const SplashScreen = ({navigation,route}) => {
     setCategorycolor(categorycolor)
    }
    const  [NewPrice,setNewPrice]=useState(0)
+   var a =moment(checkout)
+      var b =moment(checkin)
+      
+     var diff=0
   return (
     <View style={styles.container}>
          <View style={styles.headerContainer}
@@ -147,18 +151,19 @@ const SplashScreen = ({navigation,route}) => {
          
                          </View>
                          </View>
+                         <Text>{diff=(a.diff(b,'days'))} days</Text>
                          <View style={{paddingVertical:18,paddingHorizontal:18}}>
                 <Text style={{fontSize:21,fontWeight:'bold'}}>Total Fee  R</Text>
                 <View style={{justifyContent:'space-between',
     borderRadius:10,padding:10,alignItems:'center',backgroundColor:'#EDEDED',
     elevation:2,}}>
-      <Text style={{fontSize:25}}>{Price * Passenger}</Text>
+      <Text style={{fontSize:25}}>{(Price * Passenger)*diff}</Text>
     </View>
     </View>
     <TouchableOpacity style={styles.signinButton}
                 onPress={()=>navigation.navigate('ViewRating',{Price:Price,Fromplace:Fromplace,
                 Toplace:Toplace,BusType:BusType,checkin:checkin,Passenger:Passenger
-                ,checkout:checkout,Duration:Duration,NewPrice:Price*Passenger})} >
+                ,checkout:checkout,Duration:Duration,NewPrice:(Price * Passenger)*diff})} >
                   <Text style={styles.signinButtonText}
                   >Proceed</Text>
               </TouchableOpacity>
