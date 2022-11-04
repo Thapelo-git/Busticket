@@ -10,7 +10,9 @@ import { ScrollView } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { auth,db } from './Firebase'
 import { Divider } from 'react-native-elements'
+import Ticket from './Ticket'
 const ResultsScreen = ({navigation}) => {
+  const [page,setPage]=useState(0)
     const [filteredDataSource, setFilteredDataSource] = useState();
     const [Tutor, setTutor] = useState([]);
     const [Student, setStudent] = useState([])
@@ -293,22 +295,39 @@ const ResultsScreen = ({navigation}) => {
             >
      <Text style={styles.headerTitle}>Feedback</Text>
             </View>
-       <FlatList
-                    keyExtractor={(_, key) => key.toString()}
-                   
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingLeft: 20 }}
-                    data={Student}
-                    renderItem={({ item, index }) => <Card element={item} index={index} />}
-                />
-                     <FlatList
-                    keyExtractor={(_, key) => key.toString()}
-                   
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingLeft: 20 }}
-                    data={Tutor}
-                    renderItem={({ item, index }) => <NewCard element={item} index={index} />}
-                />
+            <View style={{justifyContent:'center',alignItems:'center'}}>
+      <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',
+    width:250,height:60,}}>
+          <TouchableOpacity style={{width:130,height:45,borderColor:page === 0?'#3EA055':'gainsboro',justifyContent:'center',
+        alignItems:'center',borderWidth:1}} 
+        onPress={()=>setPage(0)}>
+              <Text style={{color:page===0?'#3EA055':'gainsboro',fontWeight:'bold'}}>Paid Tickets</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{width:130,height:45,borderColor:page === 1?'#3EA055':'gainsboro',justifyContent:'center',
+        alignItems:'center',borderWidth:1}} 
+        onPress={()=>setPage(1)}>
+              <Text style={{color:page===1?'#3EA055':'gainsboro',fontWeight:'bold'}}>History</Text>
+          </TouchableOpacity>
+ 
+      </View>
+      <View style={{
+    width:'100%',}}>
+          {
+            page === 0?(<Ticket navigation={navigation}/>):(null)
+        }
+      {/* {
+            page === 0?(<LostDetails/>):(null)
+        }
+    
+         {
+            page === 2?(<SplashScreen navigation={navigation}/>):(null)
+        }
+         */}
+        </View>
+      
+        </View>
+       
+
     </View>
   )
 }
