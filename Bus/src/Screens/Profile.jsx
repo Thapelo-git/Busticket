@@ -40,11 +40,11 @@ const Profile = ({navigation}) => {
         onPress={()=>navigation.navigate('StudentProfile',{
             email:email,name:name,phonenumber:phonenumber,uid:Uid
       })}>
-    <Text style={{color:'#000'}}>Student </Text>
+    <Text style={{color:'#000'}}>Edit Profile </Text>
     <Feather name="arrow-right" size={24} />
     </TouchableOpacity >
 
-    <TouchableOpacity onPress={()=>navigation.navigate('TutorProfile',{
+    {/* <TouchableOpacity onPress={()=>navigation.navigate('TutorProfile',{
                    email:email,name:name,phonenumber:phonenumber,uid:Uid
              })}
     style={{borderWidth:2,
@@ -52,7 +52,7 @@ const Profile = ({navigation}) => {
         justifyContent:'center',alignItems:'center',flexDirection:'row'}}>
     <Text style={{color:'#000'}}>Tutor</Text> 
     <Feather name="arrow-right" size={24} />  
-    </TouchableOpacity>
+    </TouchableOpacity> */}
     <TouchableOpacity  onPress={()=>navigation.navigate('SignIn')} style={{backgroundColor:'red', width:140, marginTop: 50, borderRadius:5, padding:5}}>
 
 <View style={{flexDirection: 'row', justifyContent:'center'}}>

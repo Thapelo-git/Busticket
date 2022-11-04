@@ -11,6 +11,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { auth,db } from './Firebase'
 import { Divider } from 'react-native-elements'
 import Ticket from './Ticket'
+import History from './History'
 const ResultsScreen = ({navigation}) => {
   const [page,setPage]=useState(0)
     const [filteredDataSource, setFilteredDataSource] = useState();
@@ -315,14 +316,12 @@ const ResultsScreen = ({navigation}) => {
           {
             page === 0?(<Ticket navigation={navigation}/>):(null)
         }
-      {/* {
-            page === 0?(<LostDetails/>):(null)
+      {
+            page === 1?(<History/>):(null)
         }
     
-         {
-            page === 2?(<SplashScreen navigation={navigation}/>):(null)
-        }
-         */}
+        
+        
         </View>
       
         </View>
