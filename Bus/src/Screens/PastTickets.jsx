@@ -141,7 +141,7 @@ const PastTickets = () => {
           {
         element.Status == 'Cancelled'?(
             <Text style={{color:'red',fontWeight:'bold'}}>Cancelled</Text>
-        ):(<Text style={{color:'green'}}>{item.Status}</Text>)
+        ):(<Text style={{color:'green'}}>{element.Status}</Text>)
       }
           
         
