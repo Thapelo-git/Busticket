@@ -5,14 +5,16 @@ import Feather from 'react-native-vector-icons/Feather'
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import { ScrollView } from 'react-native-gesture-handler';
 import AdminHome from './AdminHome';
+import ActiveTicket from './ActiveTicket';
+import PastTickets from './PastTickets';
 //AdminView
 const AdminView = ({navigation,route}) => {
   const [page,setPage]=useState(0)
   return (
     <View>
-       <View style={styles.headerContainer}>
+       {/* <View style={styles.headerContainer}>
      <Text style={styles.headerTitle}></Text>
-            </View>
+            </View> */}
          <View style={styles.headerContainer}
         >
           <View style={{
@@ -37,12 +39,12 @@ const AdminView = ({navigation,route}) => {
           <TouchableOpacity style={{width:130,height:45,borderColor:page === 1?'#3EA055':'gainsboro',justifyContent:'center',
         alignItems:'center',borderWidth:1}} 
         onPress={()=>setPage(1)}>
-              <Text style={{color:page===1?'#3EA055':'gainsboro',fontWeight:'bold'}}>Lost Card</Text>
+              <Text style={{color:page===1?'#3EA055':'gainsboro',fontWeight:'bold'}}>Active Tickets</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{width:130,height:45,borderColor:page === 2?'#3EA055':'gainsboro',justifyContent:'center',
         alignItems:'center',borderWidth:1}}
         onPress={()=>setPage(2)}>
-              <Text style={{color:page===2?'#3EA055':'gainsboro',fontWeight:'bold'}}>Found Card</Text>
+              <Text style={{color:page===2?'#3EA055':'gainsboro',fontWeight:'bold'}}>Past Tickets</Text>
           </TouchableOpacity>
       </View>
       <View style={{
@@ -50,14 +52,14 @@ const AdminView = ({navigation,route}) => {
           {
             page === 0?(<AdminHome navigation={navigation}/>):(null)
         }
-      {/* {
-            page === 0?(<LostDetails/>):(null)
+      {
+            page === 1?(<ActiveTicket/>):(null)
         }
     
          {
-            page === 2?(<SplashScreen navigation={navigation}/>):(null)
+            page === 2?(<PastTickets/>):(null)
         }
-         */}
+        
         </View>
       
         </View>

@@ -33,7 +33,7 @@ const SignIn = ({props}) => {
                     .then( async res => {
                         try {
                             const jsonValue = JSON.stringify(res.user)
-                            await AsyncStorageLib.setItem("TutorUsers", res.user.uid)
+                            await AsyncStorageLib.setItem("BusUsers", res.user.uid)
                           
         
                             navigation.navigate('HomeScreen')
@@ -53,7 +53,7 @@ const SignIn = ({props}) => {
 <SafeAreaView style={{backgroundColor:'#fff',width:'100%',height:'100%'}}>
             <TouchableOpacity style={{width:'100%',display:'flex',justifyContent:'flex-start',marginVertical:30}}
             onPress={()=>navigation.navigate('Adminlogin')}>
-            <Image style={styles.image} source={require('../Images/tutor4.jpg')}/>
+            <Image style={styles.image} source={require('../Images/bus_icon.jpg')}/>
             </TouchableOpacity>
             <View style={{width:'100%',padding:20,}}>
             
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     },
     image:{
         height:80,
-        width:100,
+        width:80,
         
       },
     headerContainer:{

@@ -6,7 +6,7 @@ import {
 //PastTickets
 import { auth,db } from './Firebase'
 import { Divider } from 'react-native-elements'
-const History = () => {
+const PastTickets = () => {
     const [Tutor, setTutor] = useState([]);
     const [Student, setStudent] = useState([])
     const CurrentID = auth.currentUser.uid;
@@ -23,19 +23,8 @@ const History = () => {
                     checkin:data.checkin,Fromplace:data.Fromplace,Toplace:data.Toplace,
                     Passenger:data.Passenger,
                 })
-                
-                const text=CurrentID
-                if(text){
-                 const newData = Student.filter(function(item){
-                     const itemData = item.user ? item.user
-                     :'';
-                     const textData = text;
-                     return itemData.indexOf( textData)>-1;
-     
-                 })
-                 setStudent(newData)
-                
-               }
+                setStudent(Student)
+               
 
 
             })
@@ -177,6 +166,6 @@ const History = () => {
   )
 }
 
-export default History
+export default PastTickets
 
 const styles = StyleSheet.create({})

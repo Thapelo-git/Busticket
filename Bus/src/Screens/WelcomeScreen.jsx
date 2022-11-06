@@ -4,9 +4,9 @@ import { StyleSheet, Text, View,Image,TouchableOpacity } from 'react-native'
 const WelcomeScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
-     <Image style={styles.image} source={require('../Images/tutor4.jpg')}/>
+     <Image style={styles.image} source={require('../Images/bus_icon.jpg')}/>
      <View style={{display:'flex',justifyContent:'center',marginVertical:60,}}>
-     <Text>Tutor</Text>
+     <Text>Online Bus Tickets</Text>
      </View>
      
      <View style={{justifyContent:'center',flexDirection:'row',marginVertical:60,}}>
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
       },
       image:{
         height:180,
-        width:280,
+        width:210,
         
       },
       borderbutton:{

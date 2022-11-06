@@ -3,10 +3,10 @@ import {
     SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity,
     FlatList, Dimensions, ImageBackground, StatusBar,  ActivityIndicator,Alert,
 } from 'react-native'
-//PastTickets
+//History
 import { auth,db } from './Firebase'
 import { Divider } from 'react-native-elements'
-const History = () => {
+const ActiveTicket = () => {
     const [Tutor, setTutor] = useState([]);
     const [Student, setStudent] = useState([])
     const CurrentID = auth.currentUser.uid;
@@ -24,25 +24,14 @@ const History = () => {
                     Passenger:data.Passenger,
                 })
                 
-                const text=CurrentID
-                if(text){
-                 const newData = Student.filter(function(item){
-                     const itemData = item.user ? item.user
-                     :'';
-                     const textData = text;
-                     return itemData.indexOf( textData)>-1;
-     
-                 })
-                 setStudent(newData)
-                
-               }
+                setStudent(Student)
 
 
             })
         })
     }, [])
     const updateBooking = (key, status) => {
-        Alert.alert('Confirm',' Cancellation of payment must be done at least a day before depature ,there will be no refund',[
+        Alert.alert('Confirm',' Complet Ticket',[
           {text:'Yes',
          onPress:()=>db.ref('BusPayment').child(key).update({Status:status,})
          .then(()=>db.ref('BusPayment').once('value'))
@@ -62,7 +51,7 @@ const History = () => {
         return (
             <>
             {
-                element.Status != 'Paid'?(
+                element.Status == 'Paid'?(
                 <View style={{ margin: 20,}}>
                 <View style={{ margin: 20,backgroundColor: '#fff',elevation: 3 }}>
            <View style={{width:'100%'}}>
@@ -146,16 +135,22 @@ const History = () => {
                   </View>
                   </View>
                   <View style={{alignItems:'center'}}>
-         
+          {/* <Text
+            style={{fontWeight:'bold',}}
+            >  
+              Information
+          </Text>
+          <Text  > 1. Cancellation of
+             payment must
+             be done at least 2 hours before 
+            arrival ,there will be no refund
+          </Text> */}
          
           <View style={{alignItems:'center',justifyContent:'center',width:'100%'}}>
-          {
-        element.Status == 'Cancelled'?(
-            <Text style={{color:'red',fontWeight:'bold'}}>Cancelled</Text>
-        ):(<Text style={{color:'green'}}>{item.Status}</Text>)
-      }
-          
-        
+          <TouchableOpacity style={{height:30,width:150,justifyContent:'center',
+          alignItems:'center',borderWidth:0.5}}  onPress={()=>updateBooking(element.key,'Completed',)}>
+          <Text style={{color:'green'}}>Complete Ticket</Text>
+          </TouchableOpacity>
           </View>
           </View>
                 </View>
@@ -177,6 +172,6 @@ const History = () => {
   )
 }
 
-export default History
+export default ActiveTicket
 
 const styles = StyleSheet.create({})

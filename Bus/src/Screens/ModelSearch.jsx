@@ -21,50 +21,7 @@ const ModelSearch = ({navigation,bottomopen}) => {
   const [masterDataSource, setMasterDataSource] = useState([]);
   const [Student, setStudent] = useState([])
 
-  useEffect(() => {
-    db.ref('/TutorUsers').on('value',snap=>{
-          
-        const Student=[]
-           snap.forEach(action=>{
-               const key=action.key
-               const data =action.val()
-               Student.push({
-                key: key,
-                Avalability: data.Avalability,
-                fullname: data.fullname,location:data.location,
-                Description: data.Description, Gender: data.Gender,
-                Email: data.email, faculty: data.faculty,StartDate:data.StartDate,
-                Subject: data.Subject,Price:data.Price
   
-                   
-               })
-    
-           })
-           const text='Available'
-                if(text){
-                 const newData = Student.filter(function(item){
-                     const itemData = item.Description ? item.Description
-                     :'';
-                     const textData = text;
-                     return itemData.indexOf( textData)>-1;
-     
-                 })
-                 setStudent(newData)
-                 setFilteredDataSource(newData);
-                 setMasterDataSource(newData);
-               }
-       })
-     
-
-       db.ref('/TutorUsers/' + user).on('value', snap => {
-
-        setName(snap.val() && snap.val().fullname);
-        setPhonenumber(snap.val().phonenumber)
-        setEmail(snap.val().email)
-        
-    })
-
-  }, [])
 
     const searchFilterFunction = (text) => {
       if (text) {
@@ -84,11 +41,11 @@ const ModelSearch = ({navigation,bottomopen}) => {
   }
   const updateAccept = (key,Avalability,Gender,Price,StartDate,Subject,name,location,email) => {
      
-    db.ref('RequestTutor').push({
-        Status:'Pending',fullame,Email,PhoneNum,
-        key,Avalability,Gender,Price,StartDate,Subject,
-        name,location,email,
-      })
+    // db.ref('RequestTutor').push({
+    //     Status:'Pending',fullame,Email,PhoneNum,
+    //     key,Avalability,Gender,Price,StartDate,Subject,
+    //     name,location,email,
+    //   })
 
 }
 
@@ -173,9 +130,7 @@ const Card = ({ element, index }) => {
             {/* description */}
             <View style={{ justifyContent: 'center',  padding: 8,marginHorizontal:10 }}>
             <TouchableOpacity style={styles.signinButton}
-        onPress={()=>updateAccept(element.key,'Accepted',element.Avalability,
-        element.Gender,element.Price,element.StartDate,element.name,
-        element.location,element.email)} >
+        >
           <Text style={styles.signinButtonText}
           
           >Request</Text>

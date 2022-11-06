@@ -28,7 +28,7 @@ const SignUp = ({navigation}) => {
       email.trim().toLowerCase(),password
     ).then(res =>{
        
-          db.ref(`/TutorUsers`).child(res.user.uid).set({
+          db.ref(`/BusUsers`).child(res.user.uid).set({
             fullname:fullname,
             email:email.trim().toLowerCase(),
             phonenumber:phonenumber,
@@ -59,7 +59,7 @@ const SignUp = ({navigation}) => {
   return (
     <View style={{backgroundColor:'#fff',width:'100%',height:'100%'}}>
         <View style={{width:'100%',display:'flex',justifyContent:'flex-start',marginVertical:20}}>
-            <Image style={styles.image} source={require('../Images/tutor4.jpg')}/>
+            <Image style={styles.image} source={require('../Images/bus_icon.jpg')}/>
             </View>
        <View style={{width:'100%',padding:20,}}>
        <Formik
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
      },
      image:{
         height:80,
-        width:100,
+        width:80,
         
       },
             content:{
