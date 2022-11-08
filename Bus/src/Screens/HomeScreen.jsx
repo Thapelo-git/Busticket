@@ -34,7 +34,7 @@ const HomeScreen = ({navigation}) => {
                 Student.push({
                     key: key,Fromplace:data.Fromplace,
                     BusType: data.BusType,Toplace:data.Toplace,
-                   Price:data.Price
+                   Price:data.Price,Seats:data.Seats
                 })
               
                  setStudent(Student)
@@ -183,12 +183,20 @@ const HomeScreen = ({navigation}) => {
                 <View style={{padding:20}} key={item.key}>
                     <Text>Fee = {item.Price}</Text>
                     <Text>Type of bus: {item.BusType}</Text>
-                    <TouchableOpacity style={styles.signinButton}
+                    <Text>Seats Left: {item.Seats}</Text>
+                    {
+                        item.Seats==0?(<>
+                        <Text style={{fontSize:21,fontWeight:'bold'}}>Bus is Full</Text>
+                        </>):(<>
+                            <TouchableOpacity style={styles.signinButton}
                 onPress={()=>navigation.navigate('Splash',{Price:item.Price,Fromplace:item.Fromplace,
-                Toplace:item.Toplace,BusType:item.BusType,checkin:checkin})} >
+                Toplace:item.Toplace,BusType:item.BusType,checkin:checkin,Seats:item.Seats,buskey:item.key})} >
                   <Text style={styles.signinButtonText}
                   >Proceed</Text>
               </TouchableOpacity>
+                        </>)
+                    }
+                  
                 </View>
             ))
       }

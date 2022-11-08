@@ -13,6 +13,8 @@ const ViewRating = ({navigation,route}) => {
   const [Toplace,setToplace]=useState(route.params.Toplace)
   const [Fromplace,setFromplace]=useState(route.params.Fromplace)
   const [Price,setPrice]=useState(route.params.Price)
+  const [Buskey,setBuskey]=useState(route.params.Buskey)
+  const [Seats,setSeats]=useState(route.params.Seats)
   const [BusType,setBusType]=useState(route.params.BusType)
   const [Passenger,setPassenger]=useState(route.params.Passenger)
   const [checkin,setCheckin]=useState(route.params.checkin)
@@ -64,9 +66,17 @@ borderRadius:10,borderWidth:2,borderColor:selectedBtnIndex == index?('blue'):('#
 const addBooking=()=>{
   db.ref('BusPayment').push({
     Toplace,Fromplace,Price,BusType,Passenger,
-    checkin,Status,checkout, Duration,NewPrice,user 
+    checkin,Status,checkout, Duration,NewPrice,user ,
+    Buskey
  
   })
+  db.ref('BusPrice').child(Buskey).update({Seats:Seats-Passenger,})
+  .then(()=>db.ref('BusPrice').once('value'))
+  .then(snapshot=>snapshot.val())
+  .catch(error => ({
+    errorCode: error.code,
+    errorMessage: error.message
+  }))
   navigation.navigate('RatingScreen')
 
 }

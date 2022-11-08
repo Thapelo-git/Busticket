@@ -7,7 +7,7 @@ import {
 import { auth,db } from './Firebase'
 import { Divider } from 'react-native-elements'
 const Ticket = () => {
-    const [Tutor, setTutor] = useState([]);
+    const [Bus, setBus] = useState([]);
     const [Student, setStudent] = useState([])
     const CurrentID = auth.currentUser.uid;
     useEffect(() => {
@@ -21,7 +21,7 @@ const Ticket = () => {
                     key:key,BusType:data.BusType,checkout:data.checkout,
                     Status:data.Status,user:data.user,NewPrice:data.NewPrice,Duration:data.Duration,
                     checkin:data.checkin,Fromplace:data.Fromplace,Toplace:data.Toplace,
-                    Passenger:data.Passenger,
+                    Passenger:data.Passenger,Buskey:data.Buskey
                 })
                 
                 const text=CurrentID
@@ -40,22 +40,53 @@ const Ticket = () => {
 
             })
         })
+        db.ref('/BusPrice').on('value', snap => {
+
+          const Bus = []
+          snap.forEach(action => {
+              const key = action.key
+              const data = action.val()
+              Bus.push({
+                  key:key,Seats:data.Seats
+              })
+              setBus(Bus)
+            
+          })
+      })
     }, [])
-    const updateBooking = (key, status) => {
-        Alert.alert('Confirm',' Cancellation of payment must be done at least a day before depature ,there will be no refund',[
-          {text:'Yes',
-         onPress:()=>db.ref('BusPayment').child(key).update({Status:status,})
+    const updateBooking = (key, status,buskey ,Passenger) => {
+        // Alert.alert('Confirm',' Cancellation of payment must be done at least a day before depature ,there will be no refund',[
+        //   {text:'Yes',
+        //  onPress:()=>db.ref('BusPayment').child(key).update({Status:status,})
+        //  .then(()=>db.ref('BusPayment').once('value'))
+        //  .then(snapshot=>snapshot.val())
+        //  .catch(error => ({
+        //    errorCode: error.code,
+        //    errorMessage: error.message
+        //  })),
+        // },
+        // {text:'No'},
+        // ]);
+        db.ref('BusPayment').child(key).update({Status:status,})
          .then(()=>db.ref('BusPayment').once('value'))
          .then(snapshot=>snapshot.val())
          .catch(error => ({
            errorCode: error.code,
            errorMessage: error.message
          })),
-        },
-        {text:'No'},
-        ]);
+      
+        Bus.map(item=>(
+       
+        buskey == item.key?(
+        db.ref('BusPrice').child(buskey).update({Seats:item.Seats+Passenger,})
+         .then(()=>db.ref('BusPrice').once('value'))
+         .then(snapshot=>snapshot.val())
+         .catch(error => ({
+           errorCode: error.code,
+           errorMessage: error.message
+         }))):(<></>)
         
-     
+        ))
         
       };
     const Card = ({ element, index }) => {
@@ -159,7 +190,8 @@ const Ticket = () => {
          
           <View style={{alignItems:'center',justifyContent:'center',width:'100%'}}>
           <TouchableOpacity style={{height:30,width:70,justifyContent:'center',borderColor:'red',
-          alignItems:'center',borderWidth:0.5}}  onPress={()=>updateBooking(element.key,'Cancelled',)}>
+          alignItems:'center',borderWidth:0.5}}  onPress={()=>updateBooking(element.key,'Cancelled',element.Buskey,
+          element.Passenger)}>
           <Text style={{color:'red'}}>Cancel</Text>
           </TouchableOpacity>
           </View>

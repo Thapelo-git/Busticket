@@ -13,6 +13,8 @@ const SplashScreen = ({navigation,route}) => {
   const [Price,setPrice]=useState(route.params.Price)
   const [BusType,setBusType]=useState(route.params.BusType)
   const [Passenger,setPassenger]=useState(1)
+  const [Seats,setSeats]=useState(route.params.Seats)
+  const [Buskey,setBuskey]=useState(route.params.buskey)
   const [checkin,setCheckin]=useState(route.params.checkin)
   const [checkout,setCheckout]=useState(moment(new Date()).add(1,'days').format('YYYY/MM/DD'))
   var datetoday= new Date()
@@ -130,7 +132,7 @@ const SplashScreen = ({navigation,route}) => {
                          <Pressable style={[
                            styles.buttonAdding,{backgroundColor: '#fff',flexDirection:"row"}
                          ] }
-                       onPress={()=>setPassenger(Math.max(1,Passenger+1))}>
+                       onPress={()=>setPassenger(Math.min(Seats,Passenger+1))}>
                          <Feather
                                 name="plus" size={22}
                                 color='black'
@@ -151,6 +153,7 @@ const SplashScreen = ({navigation,route}) => {
          
                          </View>
                          </View>
+                        
                          <Text>{diff=(a.diff(b,'days'))} days</Text>
                          <View style={{paddingVertical:18,paddingHorizontal:18}}>
                 <Text style={{fontSize:21,fontWeight:'bold'}}>Total Fee  R</Text>
@@ -163,7 +166,8 @@ const SplashScreen = ({navigation,route}) => {
     <TouchableOpacity style={styles.signinButton}
                 onPress={()=>navigation.navigate('ViewRating',{Price:Price,Fromplace:Fromplace,
                 Toplace:Toplace,BusType:BusType,checkin:checkin,Passenger:Passenger
-                ,checkout:checkout,Duration:Duration,NewPrice:(Price * Passenger)*diff})} >
+                ,checkout:checkout,Duration:Duration,NewPrice:(Price * Passenger)*diff,
+                Seats:Seats,Buskey:Buskey})} >
                   <Text style={styles.signinButtonText}
                   >Proceed</Text>
               </TouchableOpacity>
