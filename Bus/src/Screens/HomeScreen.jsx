@@ -179,7 +179,8 @@ const HomeScreen = ({navigation}) => {
       />
       {
         Student.filter(element=>element.Fromplace === place1 &&
-            element.Toplace === place2 ).map(item=>(
+            element.Toplace === place2 || element.place2 === place1 &&
+            element.place1 === place2 ).map(item=>(
                 <View style={{padding:20}} key={item.key}>
                     <Text>Fee = {item.Price}</Text>
                     <Text>Type of bus: {item.BusType}</Text>

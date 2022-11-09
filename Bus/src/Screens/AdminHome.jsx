@@ -4,6 +4,7 @@ import {
     FlatList, Dimensions, StatusBar,  Alert
 } from 'react-native' 
 import { db,auth } from './Firebase'
+//AdminAdd
 import {Picker} from '@react-native-picker/picker';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'

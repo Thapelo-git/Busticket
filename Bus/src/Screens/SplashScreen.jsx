@@ -206,10 +206,11 @@ const styles = StyleSheet.create({
         
     },
       headerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 20,
+        width:'100%',
+        // flexDirection: 'row',
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        paddingVertical: 5,
         paddingHorizontal: 20
     },
     headerTitle: {
