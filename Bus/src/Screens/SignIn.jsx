@@ -52,7 +52,7 @@ const SignIn = ({props}) => {
   return (
 <SafeAreaView style={{backgroundColor:'#fff',width:'100%',height:'100%'}}>
             <TouchableOpacity style={{width:'100%',display:'flex',justifyContent:'flex-start',marginVertical:30}}
-            onPress={()=>navigation.navigate('Adminlogin')}>
+            >
             <Image style={styles.image} source={require('../Images/bus_icon.jpg')}/>
             </TouchableOpacity>
             <View style={{width:'100%',padding:20,}}>
@@ -138,6 +138,12 @@ const SignIn = ({props}) => {
             <Text>Dont have account?</Text>
             <TouchableOpacity onPress={()=>navigation.navigate('SignUp')}>
                 <Text style={{color:'blue',marginHorizontal:20}}>Sign Up</Text>
+            </TouchableOpacity>
+            </View>
+            <View style={{width:'100%',justifyContent:'center',flexDirection:'row',marginVertical:30}}>
+            <Text>Admin?</Text>
+            <TouchableOpacity onPress={()=>navigation.navigate('Adminlogin')}>
+                <Text style={{color:'blue',marginHorizontal:20}}>Sign In</Text>
             </TouchableOpacity>
             </View>
             </ScrollView>

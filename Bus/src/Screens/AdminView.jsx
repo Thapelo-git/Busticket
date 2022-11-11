@@ -9,7 +9,7 @@ import ActiveTicket from './ActiveTicket';
 import PastTickets from './PastTickets';
 //AdminView
 const AdminView = ({navigation,route}) => {
-  const [page,setPage]=useState(0)
+  const [page,setPage]=useState(1)
   return (
     <View>
        {/* <View style={styles.headerContainer}>
@@ -31,11 +31,11 @@ const AdminView = ({navigation,route}) => {
         <View style={{justifyContent:'center',alignItems:'center'}}>
       <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',
     width:250,height:60,}}>
-          <TouchableOpacity style={{width:130,height:45,borderColor:page === 0?'#3EA055':'gainsboro',justifyContent:'center',
+          {/* <TouchableOpacity style={{width:130,height:45,borderColor:page === 0?'#3EA055':'gainsboro',justifyContent:'center',
         alignItems:'center',borderWidth:1}} 
         onPress={()=>setPage(0)}>
               <Text style={{color:page===0?'#3EA055':'gainsboro',fontWeight:'bold'}}>Add Price</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity style={{width:130,height:45,borderColor:page === 1?'#3EA055':'gainsboro',justifyContent:'center',
         alignItems:'center',borderWidth:1}} 
         onPress={()=>setPage(1)}>
@@ -49,9 +49,9 @@ const AdminView = ({navigation,route}) => {
       </View>
       <View style={{
     width:'100%',}}>
-          {
+          {/* {
             page === 0?(<AdminHome navigation={navigation}/>):(null)
-        }
+        } */}
       {
             page === 1?(<ActiveTicket/>):(null)
         }
